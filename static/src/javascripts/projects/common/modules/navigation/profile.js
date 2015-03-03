@@ -5,7 +5,8 @@ define([
     'lodash/objects/assign',
     'common/utils/ajax',
     'common/utils/mediator',
-    'common/modules/identity/api'
+    'common/modules/identity/api',
+    'common/modules/ui/toggles'
 ], function (
     bean,
     bonzo,
@@ -13,7 +14,8 @@ define([
     assign,
     ajax,
     mediator,
-    id
+    id,
+    Toggles
 ) {
 
     /**
@@ -67,7 +69,7 @@ define([
             }
 
             $popup.html(
-                    '<ul class="popup popup__group popup--profile" data-link-name="Sub Sections" data-test-id="popup-profile">' +
+                    '<ul class="popup popup__group popup--profile is-off" data-link-name="Sub Sections" data-test-id="popup-profile">' +
                     this.menuListItem('Comment activity', this.opts.url + '/user/id/' + user.id) +
                     this.menuListItem('Edit profile', this.opts.url + '/public/edit') +
                     this.menuListItem('Email preferences', this.opts.url + '/email-prefs') +
@@ -76,10 +78,7 @@ define([
                     '</ul>'
             );
 
-        } else {
-            fastdom.write(function () {
-                $popup.remove();
-            });
+            this.initToggles();
         }
 
         this.emitLoadedEvent(user);
@@ -103,6 +102,11 @@ define([
      */
     Profile.prototype.emitErrorEvent = function () {
         mediator.emit(Profile.CONFIG.eventName + ':error');
+    };
+
+    Profile.prototype.initToggles = function () {
+        var toggles = new Toggles();
+        toggles.init();
     };
 
     return Profile;
